@@ -34,7 +34,7 @@ static int daemonize()
 
 	if (pid < 0) {
 		fprintf(stderr, "error: failed to spawn daemon (exorcism success?): %s\n", strerror(errno));
-		return 1;
+		exit(0);
 	}
 
 	return pid == 0;
