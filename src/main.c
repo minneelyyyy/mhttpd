@@ -115,9 +115,11 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	if (setuid(uid) != 0) {
-		fprintf(stderr, "error: failed to set user: %s\n", strerror(errno));
-		return 1;
+	if (info.user) {
+		if (setuid(uid) != 0) {
+			fprintf(stderr, "error: failed to set user: %s\n", strerror(errno));
+			return 1;
+		}
 	}
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
