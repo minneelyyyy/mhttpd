@@ -26,13 +26,27 @@ int httpd(struct server_info *info, int sock)
 	return 0;
 }
 
+static int daemonize()
+{
+	pid_t pid;
+
+	pid = fork();
+
+	if (pid < 0) {
+		fprintf(stderr, "error: failed to spawn daemon (exorcism success?): %s\n", strerror(errno));
+		return 1;
+	}
+
+	return pid == 0;
+}
+
 int main(int argc, char **argv)
 {
 	struct server_info info = { NULL, NULL, NULL, 8080 };
 	int c, sock, uid, one = 1;
 	struct sockaddr_in addr;
 
-	while ((c = getopt(argc, argv, "p:h:r:u:")) != EOF) {
+	while ((c = getopt(argc, argv, "p:h:r:u:d")) != EOF) {
 		switch (c) {
 		case 'h':
 			info.host = strdup(optarg);
@@ -46,6 +60,8 @@ int main(int argc, char **argv)
 		case 'u':
 			info.user = strdup(optarg);
 			break;
+		case 'd':
+		        if (daemonize()) return 0;
 		}
 	}
 
