@@ -1,7 +1,9 @@
 
-OBJS = src/main.o
+OBJS = src/main.o src/mhttpd.o src/http.o src/keyval.o src/strntok.o
 
 all: mhttpd
+
+CFLAGS += -D_XOPEN_SOURCE=700
 
 .PHONY: all clean
 .SUFFIXES: .c .o

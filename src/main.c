@@ -1,5 +1,3 @@
-#define _XOPEN_SOURCE 500
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -12,19 +10,10 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-struct server_info {
-	char *host;
-	char *root;
-	char *user;
-	unsigned short port;
-};
+#include "server.h"
 
 /* info must be properly filled out and sock must be a correctly initialized listen socket */
-int httpd(struct server_info *info, int sock)
-{
-	close(sock);
-	return 0;
-}
+extern int httpd(struct server_info *info, int sock);
 
 static int daemonize()
 {
@@ -92,7 +81,7 @@ int main(int argc, char **argv)
 
 		free(buf);
 	} else {
-		fprintf(stderr, "warning: specifying an unpriviledged user to run the server as is highly recommended.");
+		fprintf(stderr, "warning: specifying an unpriviledged user to run the server as is highly recommended.\n");
 	}
 
 	if (!info.root) {
