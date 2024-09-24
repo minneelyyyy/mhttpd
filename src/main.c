@@ -11,12 +11,9 @@
 #include <netinet/in.h>
 
 #include "server.h"
+#include "async.h"
 
-/* info must be properly filled out and sock must be a correctly initialized listen socket */
-extern int httpd(struct server_info *info, int sock);
-
-static int daemonize()
-{
+static int daemonize() {
 	pid_t pid;
 
 	pid = fork();
@@ -29,8 +26,7 @@ static int daemonize()
 	return pid == 0;
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 	struct server_info info = { NULL, NULL, NULL, 8080 };
 	int c, sock, uid, one = 1;
 	struct sockaddr_in addr;
@@ -116,6 +112,7 @@ int main(int argc, char **argv)
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr.sin_port = htons(info.port);
+
 	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(int)) != 0) {
 		fprintf(stderr, "error: could not set REUSEADDR for socket: %s\n", strerror(errno));
 		return 1;
@@ -131,5 +128,5 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	return httpd(&info, sock);
+	return mhttpd_async_loop(&info, sock);
 }

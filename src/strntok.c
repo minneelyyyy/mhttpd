@@ -1,7 +1,7 @@
-#include "strntok.h"
-
 #include <stdio.h>
 #include <string.h>
+
+#include "strntok.h"
 
 const char *strnstr(const char *haystack, const char *needle, size_t hsl) {
 	size_t i;
